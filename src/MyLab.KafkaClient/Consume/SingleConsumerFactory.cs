@@ -4,13 +4,13 @@ namespace MyLab.KafkaClient.Consume
 {
     class SingleConsumerFactory : IKafkaConsumerFactory
     {
-        private readonly KafkaConsumer _singleConsumer;
+        private readonly IKafkaConsumer _singleConsumer;
 
-        public SingleConsumerFactory(KafkaConsumer singleConsumer)
+        public SingleConsumerFactory(IKafkaConsumer singleConsumer)
         {
             _singleConsumer = singleConsumer ?? throw new ArgumentNullException(nameof(singleConsumer));
         }
-        public KafkaConsumer Create(IServiceProvider serviceProvider)
+        public IKafkaConsumer Create(IServiceProvider serviceProvider)
         {
             return _singleConsumer;
         }

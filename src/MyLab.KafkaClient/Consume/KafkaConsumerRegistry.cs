@@ -16,7 +16,7 @@ namespace MyLab.KafkaClient.Consume
             consumerRegistrar.Register(_consumerFactories);
         }
 
-        public IEnumerable<KafkaConsumer> ProvideConsumers()
+        public IEnumerable<IKafkaConsumer> ProvideConsumers()
         {
             return _consumerFactories
                 .Select(cf => cf.Create(_serviceProvider))

@@ -1,5 +1,7 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Confluent.Kafka;
 using Microsoft.Extensions.Hosting;
 
 namespace MyLab.KafkaClient.Consume
@@ -21,6 +23,18 @@ namespace MyLab.KafkaClient.Consume
         private void Consume(in CancellationToken stoppingToken)
         {
             var consumers = _consumerRegistry.ProvideConsumers();
+
+            var topicsForSubscribe = consumers
+                .Select(c => c.TopicName)
+                .Distinct();
+
+            var consumeConfig = new ConsumerConfig();
+            var consumerBuilder = new ConsumerBuilder<string,string>(consumeConfig);
+            var consumer = consumerBuilder.Build();
+
+            consumer.Subscribe(topicsForSubscribe);
+
+            
         }
     }
 }

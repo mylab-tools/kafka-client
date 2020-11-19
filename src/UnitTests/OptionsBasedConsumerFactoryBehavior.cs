@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using MyLab.KafkaClient.Consume;
 using Xunit;
@@ -13,9 +15,9 @@ namespace UnitTests
             //Arrange
             var initialOptions = new TestOptions
             {
-                Value = "foo"
+                Topic = "foo"
             };
-            var factory = new OptionsBasedConsumerFactory<TestOptions>(options => new TestConsumer(options));
+            var factory = new OptionsBasedConsumerFactory<TestOptions>(options => new TestConsumer{ TopicName = options.Topic});
             var serviceProvider = InitServicesWithOptions(initialOptions);
             
             //Act
@@ -23,14 +25,14 @@ namespace UnitTests
 
             //Assert
             Assert.NotNull(consumer);
-            Assert.Equal("foo", consumer.Value);
+            Assert.Equal("foo", consumer.TopicName);
         }
 
         [Fact]
         public void ShouldNotCreateConsumerIfOptionsNotSpecified()
         {
             //Arrange
-            var factory = new OptionsBasedConsumerFactory<TestOptions>(options => new TestConsumer(options));
+            var factory = new OptionsBasedConsumerFactory<TestOptions>(options => new TestConsumer { TopicName = options.Topic });
             var serviceProvider = InitServicesWithOptions(null);
 
             //Act
@@ -45,23 +47,22 @@ namespace UnitTests
             var serviceCollection = new ServiceCollection();
 
             if(initialOptions != null)
-                serviceCollection.Configure<TestOptions>(options => options.Value = initialOptions.Value);
+                serviceCollection.Configure<TestOptions>(options => options.Topic = initialOptions.Topic);
 
             return serviceCollection.BuildServiceProvider();
         }
 
         class TestOptions
         {
-            public string Value { get; set; }
+            public string Topic { get; set; }
         }
 
-        class TestConsumer : KafkaConsumer
+        class TestConsumer : IKafkaConsumer
         {
-            public string Value { get; }
-
-            public TestConsumer(TestOptions options)
+            public string TopicName { get; set; }
+            public Task ConsumeAsync(IConsumingContext ctx, CancellationToken cancellationToken)
             {
-                Value = options.Value;
+                throw new NotImplementedException();
             }
         }
     }

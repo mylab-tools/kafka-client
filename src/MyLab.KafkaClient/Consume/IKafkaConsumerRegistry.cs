@@ -7,6 +7,6 @@ namespace MyLab.KafkaClient.Consume
 {
     interface IKafkaConsumerRegistry
     {
-        IEnumerable<KafkaConsumer> ProvideConsumers();
+        IEnumerable<IKafkaConsumer> ProvideConsumers();
     }
 }

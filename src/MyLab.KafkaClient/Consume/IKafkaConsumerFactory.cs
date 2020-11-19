@@ -3,13 +3,13 @@
 namespace MyLab.KafkaClient.Consume
 {
     /// <summary>
-    /// Creates Kafak consumers
+    /// Creates Kafka consumers
     /// </summary>
     public interface IKafkaConsumerFactory
     {
         /// <summary>
         /// Creates Kafka consumer uses registered services
         /// </summary>
-        KafkaConsumer Create(IServiceProvider serviceProvider);
+        IKafkaConsumer Create(IServiceProvider serviceProvider);
     }
 }

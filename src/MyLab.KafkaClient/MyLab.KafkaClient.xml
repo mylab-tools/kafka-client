@@ -4,9 +4,14 @@
         <name>MyLab.KafkaClient</name>
     </assembly>
     <members>
+        <member name="M:MyLab.KafkaClient.ConfigProvider.#ctor(System.String,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.KafkaClient.ConfigProvider"/>
+            </summary>
+        </member>
         <member name="T:MyLab.KafkaClient.Consume.IKafkaConsumerFactory">
             <summary>
-            Creates Kafak consumers
+            Creates Kafka consumers
             </summary>
         </member>
         <member name="M:MyLab.KafkaClient.Consume.IKafkaConsumerFactory.Create(System.IServiceProvider)">
@@ -14,9 +19,50 @@
             Creates Kafka consumer uses registered services
             </summary>
         </member>
-        <member name="T:MyLab.KafkaClient.Consume.KafkaConsumer">
+        <member name="T:MyLab.KafkaClient.Consume.KafkaConsumer`1">
             <summary>
             Consumes Kafka events
+            </summary>
+            <typeparam name="TLogic">logic type</typeparam>
+        </member>
+        <member name="P:MyLab.KafkaClient.Consume.KafkaConsumer`1.TopicName">
+            <summary>
+            Target topic 
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumer`1.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.KafkaClient.Consume.KafkaConsumer`1"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumer`1.ConsumeAsync(MyLab.KafkaClient.Consume.IConsumingContext,System.Threading.CancellationToken)">
+            <summary>
+            Consumes incoming event 
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.Consume.IKafkaConsumer">
+            <summary>
+            Defines Kafka consumer
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.Consume.IKafkaConsumer.TopicName">
+            <summary>
+            Target topic 
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.IKafkaConsumer.ConsumeAsync(MyLab.KafkaClient.Consume.IConsumingContext,System.Threading.CancellationToken)">
+            <summary>
+            Consumes incoming event 
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.Consume.IConsumingContext">
+            <summary>
+            Contains tools for event consuming
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.IConsumingContext.CreateLogic``1">
+            <summary>
+            Creates logic
             </summary>
         </member>
         <member name="T:MyLab.KafkaClient.Consume.KafkaConsumerRegistrar">
@@ -34,17 +80,17 @@
             Extensions for <see cref="T:MyLab.KafkaClient.Consume.KafkaConsumerRegistrar"/>
             </summary>
         </member>
-        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumerRegistrarExtensions.Add``1(MyLab.KafkaClient.Consume.KafkaConsumerRegistrar,System.Func{``0,MyLab.KafkaClient.Consume.KafkaConsumer})">
+        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumerRegistrarExtensions.Add``1(MyLab.KafkaClient.Consume.KafkaConsumerRegistrar,System.Func{``0,MyLab.KafkaClient.Consume.IKafkaConsumer})">
             <summary>
             Registers consumer factory based on options 
             </summary>
         </member>
-        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumerRegistrarExtensions.Add``2(MyLab.KafkaClient.Consume.KafkaConsumerRegistrar,System.Func{``0,``1},System.Func{``1,MyLab.KafkaClient.Consume.KafkaConsumer})">
+        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumerRegistrarExtensions.Add``2(MyLab.KafkaClient.Consume.KafkaConsumerRegistrar,System.Func{``0,``1},System.Func{``1,MyLab.KafkaClient.Consume.IKafkaConsumer})">
             <summary>
             Registers consumer factory based on options field
             </summary>
         </member>
-        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumerRegistrarExtensions.Add(MyLab.KafkaClient.Consume.KafkaConsumerRegistrar,MyLab.KafkaClient.Consume.KafkaConsumer)">
+        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumerRegistrarExtensions.Add(MyLab.KafkaClient.Consume.KafkaConsumerRegistrar,MyLab.KafkaClient.Consume.IKafkaConsumer)">
             <summary>
             Registers consumer
             </summary>

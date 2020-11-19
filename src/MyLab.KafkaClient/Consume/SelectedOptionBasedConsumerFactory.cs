@@ -7,17 +7,17 @@ namespace MyLab.KafkaClient.Consume
         where TOptions : class, new()
     {
         private readonly Func<TOptions, TOption> _optionSelector;
-        private readonly Func<TOption, KafkaConsumer> _consumerFactoryMethod;
+        private readonly Func<TOption, IKafkaConsumer> _consumerFactoryMethod;
 
         public SelectedOptionBasedConsumerFactory(
             Func<TOptions, TOption> optionSelector,
-            Func<TOption, KafkaConsumer> consumerFactoryMethodMethod)
+            Func<TOption, IKafkaConsumer> consumerFactoryMethodMethod)
         {
             _optionSelector = optionSelector;
             _consumerFactoryMethod = consumerFactoryMethodMethod;
         }
 
-        public KafkaConsumer Create(IServiceProvider serviceProvider)
+        public IKafkaConsumer Create(IServiceProvider serviceProvider)
         {
             var options = (IOptions<TOptions>)serviceProvider.GetService(typeof(IOptions<TOptions>));
 

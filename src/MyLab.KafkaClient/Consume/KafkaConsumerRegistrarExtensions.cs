@@ -10,7 +10,7 @@ namespace MyLab.KafkaClient.Consume
         /// <summary>
         /// Registers consumer factory based on options 
         /// </summary>
-        public static void Add<TOptions>(this KafkaConsumerRegistrar registrar, Func<TOptions, KafkaConsumer> consumerFactoryProvider)
+        public static void Add<TOptions>(this KafkaConsumerRegistrar registrar, Func<TOptions, IKafkaConsumer> consumerFactoryProvider)
             where TOptions : class, new()
         {
             if (registrar == null) throw new ArgumentNullException(nameof(registrar));
@@ -22,7 +22,7 @@ namespace MyLab.KafkaClient.Consume
         /// <summary>
         /// Registers consumer factory based on options field
         /// </summary>
-        public static void Add<TOptions, TOption>(this KafkaConsumerRegistrar registrar, Func<TOptions, TOption> optionSelector, Func<TOption, KafkaConsumer> consumerFactoryProvider)
+        public static void Add<TOptions, TOption>(this KafkaConsumerRegistrar registrar, Func<TOptions, TOption> optionSelector, Func<TOption, IKafkaConsumer> consumerFactoryProvider)
             where TOptions : class, new()
         {
             if (registrar == null) throw new ArgumentNullException(nameof(registrar));
@@ -35,7 +35,7 @@ namespace MyLab.KafkaClient.Consume
         /// <summary>
         /// Registers consumer
         /// </summary>
-        public static void Add(this KafkaConsumerRegistrar registrar, KafkaConsumer consumer)
+        public static void Add(this KafkaConsumerRegistrar registrar, IKafkaConsumer consumer)
         {
             if (registrar == null) throw new ArgumentNullException(nameof(registrar));
             if (consumer == null) throw new ArgumentNullException(nameof(consumer));
@@ -47,7 +47,7 @@ namespace MyLab.KafkaClient.Consume
         /// Registers consumer type
         /// </summary>
         public static void Add<TConsumer>(this KafkaConsumerRegistrar registrar)
-            where TConsumer : KafkaConsumer
+            where TConsumer : IKafkaConsumer
         {
             if (registrar == null) throw new ArgumentNullException(nameof(registrar));
 

@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using MyLab.KafkaClient.Consume;
 using Xunit;
@@ -33,7 +35,7 @@ namespace UnitTests
             registrar.Add<TestOptions>(
                 opt => new TestConsumer
                 {
-                    Value = opt.Value
+                    TopicName = opt.Topic
                 });
 
             var cRegistry = InitRegistry(registrar);
@@ -53,17 +55,17 @@ namespace UnitTests
             registrar.Add<TestOptions>(
                 opt => new TestConsumer
                 {
-                    Value = opt.Value
+                    TopicName = opt.Topic
                 });
 
-            var cRegistry = InitRegistry(registrar, new TestOptions{Value = "foo"});
+            var cRegistry = InitRegistry(registrar, new TestOptions{Topic = "foo"});
 
             //Act
             var actualConsumer = cRegistry.ProvideConsumers().FirstOrDefault() as TestConsumer;
 
             //Assert
             Assert.NotNull(actualConsumer);
-            Assert.Equal("foo", actualConsumer.Value);
+            Assert.Equal("foo", actualConsumer.TopicName);
         }
 
         [Fact]
@@ -72,13 +74,13 @@ namespace UnitTests
             //Arrange
             var registrar = new KafkaConsumerRegistrar();
             registrar.Add<TestOptions, string>(
-                opts => opts.Value,
+                opts => opts.Topic,
                 opt => new TestConsumer
                 {
-                    Value = opt
+                    TopicName = opt
                 });
 
-            var cRegistry = InitRegistry(registrar, new TestOptions{ Value = null});
+            var cRegistry = InitRegistry(registrar, new TestOptions{ Topic = null});
 
             //Act
             var actualConsumer = cRegistry.ProvideConsumers().FirstOrDefault();
@@ -93,10 +95,10 @@ namespace UnitTests
             //Arrange
             var registrar = new KafkaConsumerRegistrar();
             registrar.Add<TestOptions, string>(
-                opts => opts.Value,
+                opts => opts.Topic,
                 opt => new TestConsumer
                 {
-                    Value = opt
+                    TopicName = opt
                 });
 
             var cRegistry = InitRegistry(registrar);
@@ -114,20 +116,20 @@ namespace UnitTests
             //Arrange
             var registrar = new KafkaConsumerRegistrar();
             registrar.Add<TestOptions, string>(
-                opts => opts.Value,
+                opts => opts.Topic,
                 opt => new TestConsumer
                 {
-                    Value = opt
+                    TopicName = opt
                 });
 
-            var cRegistry = InitRegistry(registrar, new TestOptions() { Value = "foo" });
+            var cRegistry = InitRegistry(registrar, new TestOptions() { Topic = "foo" });
 
             //Act
             var actualConsumer = cRegistry.ProvideConsumers().FirstOrDefault() as TestConsumer;
 
             //Assert
             Assert.NotNull(actualConsumer);
-            Assert.Equal("foo", actualConsumer.Value);
+            Assert.Equal("foo", actualConsumer.TopicName);
         }
 
         IKafkaConsumerRegistry InitRegistry(KafkaConsumerRegistrar registrar, TestOptions options = null)
@@ -138,21 +140,25 @@ namespace UnitTests
             serviceCollection.AddSingleton<IKafkaConsumerRegistrar>(registrar);
 
             if (options != null)
-                serviceCollection.Configure<TestOptions>(opt => opt.Value = options.Value);
+                serviceCollection.Configure<TestOptions>(opt => opt.Topic = options.Topic);
 
             var sp = serviceCollection.BuildServiceProvider();
 
             return (IKafkaConsumerRegistry)sp.GetService(typeof(IKafkaConsumerRegistry));
         }
 
-        class TestConsumer : KafkaConsumer
+        class TestConsumer : IKafkaConsumer
         {
-            public string Value { get; set; }
+            public string TopicName { get; set; }
+            public Task ConsumeAsync(IConsumingContext ctx, CancellationToken cancellationToken)
+            {
+                throw new System.NotImplementedException();
+            }
         }
 
         class TestOptions
         {
-            public string Value { get; set; }
+            public string Topic { get; set; }
         }
     }
 }

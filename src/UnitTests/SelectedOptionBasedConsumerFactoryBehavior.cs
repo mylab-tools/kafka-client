@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using MyLab.KafkaClient.Consume;
 using Xunit;
@@ -13,12 +15,12 @@ namespace UnitTests
             //Arrange
             var initialOptions = new TestOptions
             {
-                Value = "foo"
+                Topic = "foo"
             };
 
             var factory = new SelectedOptionBasedConsumerFactory<TestOptions, string>(
-                o => o.Value,
-                optVal => new TestConsumer{Value = optVal});
+                o => o.Topic,
+                optVal => new TestConsumer{ TopicName = optVal});
 
             var serviceProvider = InitServicesWithOptions(initialOptions);
 
@@ -27,7 +29,7 @@ namespace UnitTests
 
             //Assert
             Assert.NotNull(consumer);
-            Assert.Equal("foo", consumer.Value);
+            Assert.Equal("foo", consumer.TopicName);
         }
 
         [Fact]
@@ -36,12 +38,12 @@ namespace UnitTests
             //Arrange
             var initialOptions = new TestOptions
             {
-                Value = null
+                Topic = null
             };
 
             var factory = new SelectedOptionBasedConsumerFactory<TestOptions, string>(
-                o => o.Value,
-                optVal => new TestConsumer { Value = optVal });
+                o => o.Topic,
+                optVal => new TestConsumer { TopicName = optVal });
 
             var serviceProvider = InitServicesWithOptions(initialOptions);
 
@@ -57,8 +59,8 @@ namespace UnitTests
         {
             //Arrange
             var factory = new SelectedOptionBasedConsumerFactory<TestOptions, string>(
-                o => o.Value,
-                optVal => new TestConsumer { Value = optVal });
+                o => o.Topic,
+                optVal => new TestConsumer { TopicName = optVal });
 
             var serviceProvider = InitServicesWithOptions(null);
 
@@ -74,19 +76,23 @@ namespace UnitTests
             var serviceCollection = new ServiceCollection();
 
             if (initialOptions != null)
-                serviceCollection.Configure<TestOptions>(options => options.Value = initialOptions.Value);
+                serviceCollection.Configure<TestOptions>(options => options.Topic = initialOptions.Topic);
 
             return serviceCollection.BuildServiceProvider();
         }
 
         class TestOptions
         {
-            public string Value { get; set; }
+            public string Topic { get; set; }
         }
 
-        class TestConsumer : KafkaConsumer
+        class TestConsumer : IKafkaConsumer
         {
-            public string Value { get; set; }
+            public string TopicName { get; set; }
+            public Task ConsumeAsync(IConsumingContext ctx, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }
