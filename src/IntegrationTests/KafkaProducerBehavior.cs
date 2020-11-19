@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Confluent.Kafka;
 using MyLab.KafkaClient;
+using MyLab.KafkaClient.Produce;
 using MyLab.KafkaClient.Test;
 using Xunit;
 using Xunit.Abstractions;

@@ -1,6 +1,6 @@
 ﻿using Confluent.Kafka;
 
-namespace MyLab.KafkaClient
+namespace MyLab.KafkaClient.Produce
 {
     /// <summary>
     /// Throws when producing exception

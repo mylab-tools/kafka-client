@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Confluent.Kafka;
 
-namespace MyLab.KafkaClient
+namespace MyLab.KafkaClient.Produce
 {
     /// <summary>
     /// Publish events to Kafka

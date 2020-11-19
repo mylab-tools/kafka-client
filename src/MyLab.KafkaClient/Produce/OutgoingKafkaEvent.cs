@@ -3,7 +3,7 @@ using System.Reflection;
 using Confluent.Kafka;
 using Newtonsoft.Json;
 
-namespace MyLab.KafkaClient
+namespace MyLab.KafkaClient.Produce
 {
     /// <summary>
     /// Defines produced event

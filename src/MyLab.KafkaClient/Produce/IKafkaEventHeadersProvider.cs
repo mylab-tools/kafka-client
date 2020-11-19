@@ -1,6 +1,6 @@
 ﻿using Confluent.Kafka;
 
-namespace MyLab.KafkaClient
+namespace MyLab.KafkaClient.Produce
 {
     /// <summary>
     /// Defines Kafka event model which provides event headers

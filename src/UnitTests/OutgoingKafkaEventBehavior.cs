@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using Confluent.Kafka;
 using MyLab.KafkaClient;
+using MyLab.KafkaClient.Produce;
 using Newtonsoft.Json;
 using Xunit;
 

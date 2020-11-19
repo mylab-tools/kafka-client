@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Confluent.Kafka;
 
-namespace MyLab.KafkaClient
+namespace MyLab.KafkaClient.Produce
 {
     /// <summary>
     /// Extensions for <see cref="IKafkaProducer"/>

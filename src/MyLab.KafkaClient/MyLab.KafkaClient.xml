@@ -1,0 +1,265 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MyLab.KafkaClient</name>
+    </assembly>
+    <members>
+        <member name="T:MyLab.KafkaClient.Consume.IKafkaConsumerFactory">
+            <summary>
+            Creates Kafak consumers
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.IKafkaConsumerFactory.Create(System.IServiceProvider)">
+            <summary>
+            Creates Kafka consumer uses registered services
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.Consume.KafkaConsumer">
+            <summary>
+            Consumes Kafka events
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.Consume.KafkaConsumerRegistrar">
+            <summary>
+            Registers Kafka consumer factories
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumerRegistrar.Add(MyLab.KafkaClient.Consume.IKafkaConsumerFactory)">
+            <summary>
+            Registers new consumer factory
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.Consume.KafkaConsumerRegistrarExtensions">
+            <summary>
+            Extensions for <see cref="T:MyLab.KafkaClient.Consume.KafkaConsumerRegistrar"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumerRegistrarExtensions.Add``1(MyLab.KafkaClient.Consume.KafkaConsumerRegistrar,System.Func{``0,MyLab.KafkaClient.Consume.KafkaConsumer})">
+            <summary>
+            Registers consumer factory based on options 
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumerRegistrarExtensions.Add``2(MyLab.KafkaClient.Consume.KafkaConsumerRegistrar,System.Func{``0,``1},System.Func{``1,MyLab.KafkaClient.Consume.KafkaConsumer})">
+            <summary>
+            Registers consumer factory based on options field
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumerRegistrarExtensions.Add(MyLab.KafkaClient.Consume.KafkaConsumerRegistrar,MyLab.KafkaClient.Consume.KafkaConsumer)">
+            <summary>
+            Registers consumer
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumerRegistrarExtensions.Add``1(MyLab.KafkaClient.Consume.KafkaConsumerRegistrar)">
+            <summary>
+            Registers consumer type
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.IKafkaLog">
+            <summary>
+            Collect kafka communications
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.IKafkaLog.ReportConsuming(Confluent.Kafka.ConsumeResult{System.String,System.String})">
+            <summary>
+            Reports about success consuming
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.IKafkaLog.ReportProducing(Confluent.Kafka.DeliveryResult{System.String,System.String})">
+            <summary>
+            Report about success producing
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.IKafkaLog.ReportProducingError(Confluent.Kafka.ProduceException{System.String,System.String})">
+            <summary>
+            Report about producing error
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.IKafkaLog.ReportConsumingError(Confluent.Kafka.ConsumeException)">
+            <summary>
+            Report about consuming error
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.IKafkaLogWriter">
+            <summary>
+            Writes log into string output
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.IKafkaLogWriter.WriteLine(System.String)">
+            <summary>
+            Writes log line
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.KafkaTopicAttribute">
+            <summary>
+            Defines topic name for kafka event model
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.KafkaTopicAttribute.TopicName">
+            <summary>
+            Gets target topic name
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.KafkaTopicAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.KafkaClient.KafkaTopicAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.Produce.HeadersExtensions">
+            <summary>
+            Extensions for <see cref="T:Confluent.Kafka.Headers"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Produce.HeadersExtensions.Add(Confluent.Kafka.Headers,System.String,System.Object)">
+            <summary>
+            Append a new header to the collection
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Produce.HeadersExtensions.Add(Confluent.Kafka.Headers,System.String,System.String)">
+            <summary>
+            Append a new header to the collection
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.Produce.IKafkaEventHeadersProvider">
+            <summary>
+            Defines Kafka event model which provides event headers
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Produce.IKafkaEventHeadersProvider.ProvideHeaders(Confluent.Kafka.Headers)">
+            <summary>
+            Adds headers into specified collection
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.Produce.IKafkaEventKayProvider">
+            <summary>
+            Defines Kafka event model which provides event key
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Produce.IKafkaEventKayProvider.ProvideKey">
+            <summary>
+            Provides Kafka event key
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.Produce.IKafkaProducer">
+            <summary>
+            Publish events to Kafka
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Produce.IKafkaProducer.ProduceAsync(MyLab.KafkaClient.Produce.OutgoingKafkaEvent,System.Threading.CancellationToken)">
+            <summary>
+            Publish event to Kafka
+            </summary>
+            <exception cref="T:MyLab.KafkaClient.Produce.KafkaProduceException">Producing error</exception>
+        </member>
+        <member name="T:MyLab.KafkaClient.Produce.KafkaProduceException">
+            <summary>
+            Throws when producing exception
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.Produce.KafkaProducerExtensions">
+            <summary>
+            Extensions for <see cref="T:MyLab.KafkaClient.Produce.IKafkaProducer"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Produce.KafkaProducerExtensions.ProduceAsync(MyLab.KafkaClient.Produce.IKafkaProducer,System.Object,System.Threading.CancellationToken)">
+            <summary>
+            Publish event to Kafka
+            </summary>
+            <exception cref="T:MyLab.KafkaClient.Produce.KafkaProduceException">Producing error</exception>
+        </member>
+        <member name="T:MyLab.KafkaClient.Produce.OutgoingKafkaEvent">
+            <summary>
+            Defines produced event
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.Produce.OutgoingKafkaEvent.Target">
+            <summary>
+            Specifies topic and partition for publishing
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.Produce.OutgoingKafkaEvent.Headers">
+            <summary>
+            Specifies event headers
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.Produce.OutgoingKafkaEvent.Key">
+            <summary>
+            Specifies event key
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.Produce.OutgoingKafkaEvent.Content">
+            <summary>
+            Content
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Produce.OutgoingKafkaEvent.#ctor(System.Object)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.KafkaClient.Produce.OutgoingKafkaEvent"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Produce.OutgoingKafkaEvent.GetTarget">
+            <summary>
+            Gets evaluated <see cref="T:Confluent.Kafka.TopicPartition"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Produce.OutgoingKafkaEvent.ToNativeMessage">
+            <summary>
+            Creates <see cref="T:Confluent.Kafka.Message`2"/> from contained properties
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.StringKafkaLog.#ctor(MyLab.KafkaClient.IKafkaLogWriter)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.KafkaClient.StringKafkaLog"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.Test.KafkaFixture">
+            <summary>
+            Provides abilities to work with kafka for testing
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Test.KafkaFixture.CreateTopicFactory(Confluent.Kafka.ClientConfig,System.String,MyLab.KafkaClient.IKafkaLog)">
+            <summary>
+            Creates new topic factory for specified configuration
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.Test.KafkaTopic">
+            <summary>
+            Represent Kafka topic
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.Test.KafkaTopic.Name">
+            <summary>
+            Topic name
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.Test.KafkaTopic.Log">
+            <summary>
+            Gets or sets Kafka communications log
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Test.KafkaTopic.#ctor(System.String,Confluent.Kafka.IAdminClient,Confluent.Kafka.ClientConfig)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.KafkaClient.Test.KafkaTopic"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.Test.KafkaTopicFactory">
+            <summary>
+            Creates Kafka topics
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.Test.KafkaTopicFactory.TopicNamePrefix">
+            <summary>
+            Adds prefix for topic name if create with Id and random Id
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.Test.KafkaTopicFactory.Log">
+            <summary>
+            Gets or sets Kafka communications log
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Test.KafkaTopicFactory.#ctor(Confluent.Kafka.IAdminClient,Confluent.Kafka.ClientConfig)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.KafkaClient.Test.KafkaTopicFactory"/>
+            </summary>
+        </member>
+    </members>
+</doc>

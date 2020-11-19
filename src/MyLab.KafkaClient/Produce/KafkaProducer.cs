@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Confluent.Kafka;
 using Microsoft.Extensions.Options;
 
-namespace MyLab.KafkaClient
+namespace MyLab.KafkaClient.Produce
 {
     class KafkaProducer : IKafkaProducer
     {
