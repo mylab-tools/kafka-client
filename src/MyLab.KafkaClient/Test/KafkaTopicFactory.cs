@@ -22,6 +22,11 @@ namespace MyLab.KafkaClient.Test
         public string TopicNamePrefix { get; set; }
 
         /// <summary>
+        /// Gets or sets Kafka communications log
+        /// </summary>
+        public IKafkaLog Log { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of <see cref="KafkaTopicFactory"/>
         /// </summary>
         public KafkaTopicFactory(IAdminClient adminClient, ClientConfig clientConfig)
@@ -35,10 +40,13 @@ namespace MyLab.KafkaClient.Test
             await _adminClient.CreateTopicsAsync(Enumerable.Repeat(new TopicSpecification
             {
                 Name = fullName,
-                NumPartitions = 1
+                NumPartitions = 1,
             }, 1));
 
-            var topic = new KafkaTopic(fullName, _adminClient, _clientConfig);
+            var topic = new KafkaTopic(fullName, _adminClient, _clientConfig)
+            {
+                Log = Log
+            };
 
             _createdTopics.Add(topic);
             return topic;

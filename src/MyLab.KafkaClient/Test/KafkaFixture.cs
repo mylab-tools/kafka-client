@@ -16,7 +16,10 @@ namespace MyLab.KafkaClient.Test
         /// <summary>
         /// Creates new topic factory for specified configuration
         /// </summary>
-        public KafkaTopicFactory CreateTopicFactory(ClientConfig clientConfig, string topicNamePrefix = null)
+        public KafkaTopicFactory CreateTopicFactory(
+            ClientConfig clientConfig, 
+            string topicNamePrefix = null,
+            IKafkaLog kafkaLog = null)
         {
             var config = new AdminClientConfig(clientConfig);
 
@@ -24,7 +27,8 @@ namespace MyLab.KafkaClient.Test
 
             var factory = new KafkaTopicFactory(adminClient, clientConfig)
             {
-                TopicNamePrefix = topicNamePrefix
+                TopicNamePrefix = topicNamePrefix,
+                Log = kafkaLog
             };
 
             _factories.Add(factory);

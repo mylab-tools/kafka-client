@@ -1,4 +1,6 @@
 ﻿using Confluent.Kafka;
+using MyLab.KafkaClient;
+using Xunit.Abstractions;
 
 namespace IntegrationTests
 {
@@ -8,5 +10,10 @@ namespace IntegrationTests
         {
             BootstrapServers = "localhost:1192"
         };
+
+        public static IKafkaLog CreateKafkaLog(ITestOutputHelper output)
+        {
+            return new StringKafkaLog(new TestLogWriter(output));
+        }
     }
 }

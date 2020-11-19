@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLab.KafkaClient", "MyLab.KafkaClient\MyLab.KafkaClient.csproj", "{86D8C9E1-F890-42AC-B807-F3D52AA2043B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{F5195626-B0CE-428C-9A6E-212A5C472463}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{F5195626-B0CE-428C-9A6E-212A5C472463}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{E839D269-B6D9-4322-A21C-9E9623DCBDFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{F5195626-B0CE-428C-9A6E-212A5C472463}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5195626-B0CE-428C-9A6E-212A5C472463}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5195626-B0CE-428C-9A6E-212A5C472463}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E839D269-B6D9-4322-A21C-9E9623DCBDFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E839D269-B6D9-4322-A21C-9E9623DCBDFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E839D269-B6D9-4322-A21C-9E9623DCBDFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E839D269-B6D9-4322-A21C-9E9623DCBDFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

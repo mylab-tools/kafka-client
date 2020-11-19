@@ -1,0 +1,41 @@
+﻿using System.Threading.Tasks;
+using Confluent.Kafka;
+using MyLab.KafkaClient;
+using MyLab.KafkaClient.Test;
+using Xunit;
+using Xunit.Abstractions;
+
+namespace IntegrationTests
+{
+    public class KafkaProducerBehavior : IClassFixture<KafkaFixture>
+    {
+        private readonly KafkaTopicFactory _tFactory;
+        private readonly IKafkaLog _log;
+
+        public KafkaProducerBehavior(KafkaFixture fxt, ITestOutputHelper output)
+        {
+            _log = TestStuff.CreateKafkaLog(output);
+            _tFactory = fxt.CreateTopicFactory(TestStuff.Config, nameof(KafkaProducerBehavior)+"_", _log);
+        }
+
+        [Fact]
+        public async Task ShouldProduceEvent()
+        {
+            //Arrange
+            var topic = await _tFactory.CreateWithRandomIdAsync();
+            var produceTarget = new TopicPartition(topic.Name, Partition.Any);
+
+            var config = new ProducerConfig(TestStuff.Config);
+            
+            var producer = new KafkaProducer(config, _log);
+
+            //Act
+            await producer.ProduceAsync(new OutgoingKafkaEvent("foo"){Target = produceTarget });
+
+            var incoming = topic.ConsumeOne();
+
+            //Assert
+            Assert.Equal("foo", incoming);
+        }
+    }
+}
