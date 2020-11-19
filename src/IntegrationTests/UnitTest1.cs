@@ -59,7 +59,7 @@ namespace IntegrationTests
             var conf = new ConsumerConfig
             {
 
-                GroupId = "test-consumer-group3",
+                GroupId = "test-consumer-group4",
                 BootstrapServers = "localhost:1192",
                 // Note: The AutoOffsetReset property determines the start offset in the event
                 // there are not yet any committed offsets for the consumer group for the
@@ -86,6 +86,8 @@ namespace IntegrationTests
                         {
                             var cr = c.Consume(cts.Token);
                             _output.WriteLine($"Consumed message '{cr.Value}' at: '{cr.TopicPartitionOffset}'.");
+
+                            c.Commit(new TopicPartitionOffset[]{new TopicPartitionOffset("test-topic", new Partition(0), new Offset(3)) });
                         }
                         catch (ConsumeException e)
                         {

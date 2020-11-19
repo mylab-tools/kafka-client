@@ -4,9 +4,24 @@
         <name>MyLab.KafkaClient</name>
     </assembly>
     <members>
-        <member name="M:MyLab.KafkaClient.ConfigProvider.#ctor(System.String,Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="T:MyLab.KafkaClient.Consume.IConsumingContext">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.KafkaClient.ConfigProvider"/>
+            Contains tools for event consuming
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.IConsumingContext.CreateLogic``1">
+            <summary>
+            Creates logic
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.IConsumingContext.ProvideEvent``1">
+            <summary>
+            Provides incoming Kafka event
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.ConsumingContext.#ctor(System.IServiceProvider,Confluent.Kafka.ConsumeResult{System.String,System.String})">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.KafkaClient.Consume.ConsumingContext"/>
             </summary>
         </member>
         <member name="T:MyLab.KafkaClient.Consume.IKafkaConsumerFactory">
@@ -17,6 +32,41 @@
         <member name="M:MyLab.KafkaClient.Consume.IKafkaConsumerFactory.Create(System.IServiceProvider)">
             <summary>
             Creates Kafka consumer uses registered services
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.Consume.IncomingKafkaEvent`1">
+            <summary>
+            Defines consumed event
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.Consume.IncomingKafkaEvent`1.Headers">
+            <summary>
+            The collection of message headers (or null). Specifying null or an empty list are equivalent. The order of headers is maintained, and duplicate header keys are allowed.
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.Consume.IncomingKafkaEvent`1.IsPartitionEof">
+            <summary>
+            True if this instance represents an end of partition event, false if it represents a message in kafka.
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.Consume.IncomingKafkaEvent`1.TopicPartitionOffset">
+            <summary>
+            The TopicPartitionOffset associated with the message.
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.Consume.IncomingKafkaEvent`1.Content">
+            <summary>
+            Event content
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.Consume.IncomingKafkaEvent`1.Key">
+            <summary>
+            The Kafka message Key
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.IncomingKafkaEvent`1.#ctor(Confluent.Kafka.ConsumeResult{System.String,System.String})">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.KafkaClient.Consume.IncomingKafkaEvent`1"/>
             </summary>
         </member>
         <member name="T:MyLab.KafkaClient.Consume.KafkaConsumer`1">
@@ -55,16 +105,6 @@
             Consumes incoming event 
             </summary>
         </member>
-        <member name="T:MyLab.KafkaClient.Consume.IConsumingContext">
-            <summary>
-            Contains tools for event consuming
-            </summary>
-        </member>
-        <member name="M:MyLab.KafkaClient.Consume.IConsumingContext.CreateLogic``1">
-            <summary>
-            Creates logic
-            </summary>
-        </member>
         <member name="T:MyLab.KafkaClient.Consume.KafkaConsumerRegistrar">
             <summary>
             Registers Kafka consumer factories
@@ -98,6 +138,66 @@
         <member name="M:MyLab.KafkaClient.Consume.KafkaConsumerRegistrarExtensions.Add``1(MyLab.KafkaClient.Consume.KafkaConsumerRegistrar)">
             <summary>
             Registers consumer type
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.Consume.IKafkaEventAccessor">
+            <summary>
+            Gets access to scoped incoming Kafka event
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.IKafkaEventAccessor.GetScopedIncomingEvent``1">
+            <summary>
+            Gets scoped event consuming result
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.HeaderExtensions">
+            <summary>
+            Extensions for <see cref="T:Confluent.Kafka.Header"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.HeaderExtensions.ToStringValue(Confluent.Kafka.Header)">
+            <summary>
+            Converts header value to string
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.HeaderExtensions.ToObject``1(Confluent.Kafka.Header)">
+            <summary>
+            Converts header value to object
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.HeadersExtensions">
+            <summary>
+            Extensions for <see cref="T:Confluent.Kafka.Headers"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.HeadersExtensions.Add(Confluent.Kafka.Headers,System.String,System.Object)">
+            <summary>
+            Append a new header to the collection
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.HeadersExtensions.Add(Confluent.Kafka.Headers,System.String,System.String)">
+            <summary>
+            Append a new header to the collection
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.IAdminConfigProvider">
+            <summary>
+            Provides Kafka admin config
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.IAdminConfigProvider.ProvideAdminConfig">
+            <summary>
+            Provides admin config
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.IConsumerConfigProvider">
+            <summary>
+            Provides Kafka consumer config
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.IConsumerConfigProvider.ProvideConsumerConfig">
+            <summary>
+            Provides consumer config
             </summary>
         </member>
         <member name="T:MyLab.KafkaClient.IKafkaLog">
@@ -135,6 +235,21 @@
             Writes log line
             </summary>
         </member>
+        <member name="T:MyLab.KafkaClient.IProducerConfigProvider">
+            <summary>
+            Provides Kafka producer config
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.IProducerConfigProvider.ProvideProducerConfig">
+            <summary>
+            Provides producer config
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.KafkaConfigProvider.#ctor(System.String,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.KafkaClient.KafkaConfigProvider"/>
+            </summary>
+        </member>
         <member name="T:MyLab.KafkaClient.KafkaTopicAttribute">
             <summary>
             Defines topic name for kafka event model
@@ -148,21 +263,6 @@
         <member name="M:MyLab.KafkaClient.KafkaTopicAttribute.#ctor(System.String)">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.KafkaClient.KafkaTopicAttribute"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.KafkaClient.Produce.HeadersExtensions">
-            <summary>
-            Extensions for <see cref="T:Confluent.Kafka.Headers"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.KafkaClient.Produce.HeadersExtensions.Add(Confluent.Kafka.Headers,System.String,System.Object)">
-            <summary>
-            Append a new header to the collection
-            </summary>
-        </member>
-        <member name="M:MyLab.KafkaClient.Produce.HeadersExtensions.Add(Confluent.Kafka.Headers,System.String,System.String)">
-            <summary>
-            Append a new header to the collection
             </summary>
         </member>
         <member name="T:MyLab.KafkaClient.Produce.IKafkaEventHeadersProvider">

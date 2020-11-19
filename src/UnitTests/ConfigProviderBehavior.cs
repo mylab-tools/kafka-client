@@ -18,10 +18,10 @@ namespace UnitTests
 
             LogConfig(config);
 
-            var configProvider = new ConfigProvider("Kafka", config);
+            var configProvider = new KafkaConfigProvider("Kafka", config);
 
             //Act
-            var cfg = configProvider.GetAdminConfig();
+            var cfg = configProvider.ProvideAdminConfig();
 
             LogConfig(cfg);
 
@@ -40,10 +40,10 @@ namespace UnitTests
 
             LogConfig(config);
 
-            var configProvider = new ConfigProvider("Kafka", config);
+            var configProvider = new KafkaConfigProvider("Kafka", config);
 
             //Act
-            var cfg = configProvider.GetConsumeConfig();
+            var cfg = configProvider.ProvideConsumerConfig();
 
             LogConfig(cfg);
 
@@ -62,10 +62,10 @@ namespace UnitTests
 
             LogConfig(config);
 
-            var configProvider = new ConfigProvider("Kafka", config);
+            var configProvider = new KafkaConfigProvider("Kafka", config);
 
             //Act
-            var cfg = configProvider.GetProduceConfig();
+            var cfg = configProvider.ProvideProducerConfig();
 
             LogConfig(cfg);
 
@@ -85,10 +85,10 @@ namespace UnitTests
 
             LogConfig(config);
 
-            var configProvider = new ConfigProvider("Kafka", config);
+            var configProvider = new KafkaConfigProvider("Kafka", config);
 
             //Act
-            var cfg = configProvider.GetConsumeConfig();
+            var cfg = configProvider.ProvideConsumerConfig();
 
             LogConfig(cfg);
 

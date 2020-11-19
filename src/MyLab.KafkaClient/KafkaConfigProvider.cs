@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace MyLab.KafkaClient
 {
-    class ConfigProvider
+    class KafkaConfigProvider : IAdminConfigProvider, IProducerConfigProvider, IConsumerConfigProvider
     {
         private readonly string _baseSectionName;
         private readonly IConfiguration _configuration;
@@ -20,15 +20,15 @@ namespace MyLab.KafkaClient
         public string ConsumeSectionName { get; set; } = DefaultConsumeSectionName;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="ConfigProvider"/>
+        /// Initializes a new instance of <see cref="KafkaConfigProvider"/>
         /// </summary>
-        public ConfigProvider(string baseSectionName, IConfiguration configuration)
+        public KafkaConfigProvider(string baseSectionName, IConfiguration configuration)
         {
             _baseSectionName = baseSectionName ?? throw new ArgumentNullException(nameof(baseSectionName));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public AdminClientConfig GetAdminConfig()
+        public AdminClientConfig ProvideAdminConfig()
         {
             var baseSection = _configuration.GetSection(_baseSectionName);
             var config = new AdminClientConfig();
@@ -39,7 +39,7 @@ namespace MyLab.KafkaClient
             return config;
         }
 
-        public ProducerConfig GetProduceConfig()
+        public ProducerConfig ProvideProducerConfig()
         {
             var baseSection = _configuration.GetSection(_baseSectionName);
             var config = new ProducerConfig();
@@ -50,7 +50,7 @@ namespace MyLab.KafkaClient
             return config;
         }
 
-        public ConsumerConfig GetConsumeConfig()
+        public ConsumerConfig ProvideConsumerConfig()
         {
             var baseSection = _configuration.GetSection(_baseSectionName);
             var config = new ConsumerConfig();

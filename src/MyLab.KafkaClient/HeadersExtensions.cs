@@ -2,7 +2,7 @@
 using Confluent.Kafka;
 using Newtonsoft.Json;
 
-namespace MyLab.KafkaClient.Produce
+namespace MyLab.KafkaClient
 {
     /// <summary>
     /// Extensions for <see cref="Headers"/>
