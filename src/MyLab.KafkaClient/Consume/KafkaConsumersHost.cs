@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Confluent.Kafka;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -10,24 +9,16 @@ namespace MyLab.KafkaClient.Consume
 {
     class KafkaConsumersHost : BackgroundService
     {
-        private readonly IServiceProvider _serviceProvider;
         private readonly IKafkaConsumerRegistry _consumerRegistry;
-        private readonly IKafkaLog _kafkaLog;
-        private readonly IConsumer<string, string> _nativeConsumer;
+        private readonly ConsumingManager _consumingManager;
 
         public KafkaConsumersHost(
             IServiceProvider serviceProvider,
-            IKafkaConsumerRegistry consumerRegistry, 
-            IConsumerConfigProvider consumerConfigProvider,
-            IKafkaLog kafkaLog = null)
+            IKafkaConsumerRegistry consumerRegistry)
         {
-            _serviceProvider = serviceProvider;
             _consumerRegistry = consumerRegistry;
-            _kafkaLog = kafkaLog;
 
-            var consumeConfig = consumerConfigProvider.ProvideConsumerConfig();
-            var consumerBuilder = new ConsumerBuilder<string, string>(consumeConfig);
-            _nativeConsumer = consumerBuilder.Build();
+            _consumingManager = ActivatorUtilities.CreateInstance<ConsumingManager>(serviceProvider);
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -41,17 +32,7 @@ namespace MyLab.KafkaClient.Consume
                 .ProvideConsumers()
                 .ToArray();
 
-            var consumeManager = ActivatorUtilities.CreateInstance<ConsumingManager>(_serviceProvider);
-            consumeManager.KafkaLog = _kafkaLog;
-
-            await consumeManager.ConsumeLoopAsync(_nativeConsumer, consumers, stoppingToken);
-        }
-
-        public override void Dispose()
-        {
-            _nativeConsumer.Dispose();
-
-            base.Dispose();
+            await _consumingManager.ConsumeLoopAsync(consumers, stoppingToken);
         }
     }
 }

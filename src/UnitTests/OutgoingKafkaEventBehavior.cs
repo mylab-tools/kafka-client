@@ -160,7 +160,8 @@ namespace UnitTests
             var fooHeaderVal = JsonConvert.DeserializeObject<string>(fooStrHeaderVal);
 
             var bazStrHeaderVal = Encoding.UTF8.GetString(nMsg.Headers.GetLastBytes("baz"));
-            var bazHeaderVal = JsonConvert.DeserializeObject<string>(bazStrHeaderVal);
+            //var bazHeaderVal = JsonConvert.DeserializeObject<string>(bazStrHeaderVal);
+            var bazHeaderVal = bazStrHeaderVal;
 
             //Assert
             Assert.Equal("bar", fooHeaderVal);

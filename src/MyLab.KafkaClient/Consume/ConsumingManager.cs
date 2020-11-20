@@ -12,20 +12,23 @@ namespace MyLab.KafkaClient.Consume
     class ConsumingManager
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly IKafkaLog _kafkaLog;
         private readonly DslLogger _log;
-
-        public IKafkaLog KafkaLog { get; set; }
+        private readonly ConsumerConfig _config;
 
         public ConsumingManager( 
             IServiceProvider serviceProvider,
+            IConsumerConfigProvider consumerConfigProvider,
+            IKafkaLog kafkaLog = null,
             ILogger<ConsumingManager> logger = null)
         {
             _serviceProvider = serviceProvider;
+            _config = consumerConfigProvider.ProvideConsumerConfig();
+            _kafkaLog = kafkaLog;
             _log = logger?.Dsl();
         }
 
         public async Task ConsumeLoopAsync(
-            IConsumer<string, string> nativeConsumer,
             IKafkaConsumer[] consumers, 
             CancellationToken cancellationToken)
         {
@@ -33,47 +36,62 @@ namespace MyLab.KafkaClient.Consume
                 .Select(c => c.TopicName)
                 .Distinct();
 
+            var nativeConsumer = CreateConsumer();
             nativeConsumer.Subscribe(topicsForSubscribe);
 
-            while (!cancellationToken.IsCancellationRequested)
+            try
             {
-                try
+                while (!cancellationToken.IsCancellationRequested)
                 {
-                    var incomingEvent = nativeConsumer.Consume(cancellationToken);
-
-                    if (incomingEvent == null || incomingEvent.Message == null)
-                        continue;
-
-                    var hitConsumers = consumers
-                        .Where(c => c.TopicName == incomingEvent.Topic)
-                        .ToArray();
-
-                    await ProcessEvent(nativeConsumer, hitConsumers, incomingEvent, cancellationToken);
-
-                    KafkaLog?.ReportConsuming(incomingEvent);
-                }
-                catch (OperationCanceledException)
-                {
-                    break;
-                }
-                catch (ConsumeException e)
-                {
-                    KafkaLog?.ReportConsumingError(e);
-
-                    if (e.Error.IsFatal)
+                    try
                     {
-                        _log.Error("Fatal error when event consuming", e).Write();
+                        var incomingEvent = nativeConsumer.Consume(cancellationToken);
+
+                        if (incomingEvent?.Message == null)
+                        {
+                            throw new InvalidOperationException("Incoming message is empty");
+                        }
+
+                        var hitConsumers = consumers
+                            .Where(c => c.TopicName == incomingEvent.Topic)
+                            .ToArray();
+
+                        await ProcessEvent(nativeConsumer, hitConsumers, incomingEvent, cancellationToken);
+
+                        _kafkaLog?.ReportConsuming(incomingEvent);
                     }
-                    else
+                    catch (OperationCanceledException)
                     {
-                        _log.Error(e).Write();
+                        break;
                     }
-                }
-                catch (Exception e)
-                {
-                    _log.Error("Unhandled error when event consuming", e).Write();
+                    catch (ConsumeException e)
+                    {
+                        _kafkaLog?.ReportConsumingError(e);
+
+                        if (e.Error.IsFatal)
+                        {
+                            _log.Error("Fatal error when event consuming", e).Write();
+                        }
+                        else
+                        {
+                            _log.Error(e).Write();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        _log.Error("Unhandled error when event consuming", e).Write();
+                    }
                 }
             }
+            finally
+            {
+                nativeConsumer.Dispose();
+            }
+        }
+
+        private IConsumer<string, string> CreateConsumer()
+        {
+            return new ConsumerBuilder<string, string>(_config).Build();
         }
 
         private async Task ProcessEvent(
