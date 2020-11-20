@@ -11,7 +11,7 @@ namespace MyLab.KafkaClient
 
         public const string DefaultCommonSectionName = "";
         public const string DefaultAdminSectionName = "Admin";
-        public const string DefaultProduceSectionName = "Produce";
+        public const string DefaultProduceSectionName = "ProduceAsync";
         public const string DefaultConsumeSectionName = "Consume";
 
         public string CommonSectionName { get; set; } = DefaultCommonSectionName;

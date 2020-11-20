@@ -16,7 +16,7 @@ namespace UnitTests
         private const string ConsumeConfigJson =
             "{\"Kafka\":{\"Consume\":{\"SaslUsername\":\"bar-user\", \"GroupId\":\"foo-group\"}}}";
 
-        private const string ProduceConfigJson = "{\"Kafka\":{\"Produce\":{\"Partitioner\":\"MurMur2\"}}}";
+        private const string ProduceConfigJson = "{\"Kafka\":{\"ProduceAsync\":{\"Partitioner\":\"MurMur2\"}}}";
 
         /// <summary>
         /// Initializes a new instance of <see cref="ConfigProviderBehavior"/>

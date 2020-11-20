@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Confluent.Kafka;
 
@@ -47,6 +46,9 @@ namespace MyLab.KafkaClient.Test
                 new ConsumerBuilder<string, string>(consumerConfig).Build());
         }
 
+        /// <summary>
+        /// Gets true if topic exists
+        /// </summary>
         public bool Exists()
         {
             var md = _adminClient.GetMetadata(Name,TimeSpan.FromMinutes(1));
@@ -58,15 +60,21 @@ namespace MyLab.KafkaClient.Test
             return found.Partitions != null && found.Partitions.Count != 0;
         }
 
-        public Task<TopicPartitionOffset> Produce(string content)
+        /// <summary>
+        /// Produces event with specified content
+        /// </summary>
+        public Task<TopicPartitionOffset> ProduceAsync(string content)
         {
-            return Produce(new Message<string, string>
+            return ProduceAsync(new Message<string, string>
             {
                 Value = content
             });
         }
 
-        public async Task<TopicPartitionOffset> Produce(Message<string, string> message)
+        /// <summary>
+        /// Produces event with specified message
+        /// </summary>
+        public async Task<TopicPartitionOffset> ProduceAsync(Message<string, string> message)
         {
             DeliveryResult<string, string> res;
 
@@ -76,7 +84,7 @@ namespace MyLab.KafkaClient.Test
 
                 Log?.ReportProducing(res);
             }
-            catch (ProduceException<string,string> e)
+            catch (ProduceException<string, string> e)
             {
                 Log?.ReportProducingError(e);
                 throw;
@@ -84,6 +92,10 @@ namespace MyLab.KafkaClient.Test
 
             return res.TopicPartitionOffset;
         }
+
+        /// <summary>
+        /// Consumes next one event
+        /// </summary>
 
         public string ConsumeOne(TimeSpan timeout = default)
         {
@@ -111,6 +123,15 @@ namespace MyLab.KafkaClient.Test
             return incomingEvent.Message.Value;
         }
 
+        /// <summary>
+        /// Provides inner consumer
+        /// </summary>
+        public IConsumer<string, string> ProvideConsumer()
+        {
+            return _consumer.Value;
+        }
+
+        /// <inheritdoc />
         public async ValueTask DisposeAsync()
         {
             await _adminClient.DeleteTopicsAsync(Enumerable.Repeat(Name, 1));

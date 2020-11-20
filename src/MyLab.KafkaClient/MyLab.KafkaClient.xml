@@ -4,12 +4,17 @@
         <name>MyLab.KafkaClient</name>
     </assembly>
     <members>
+        <member name="M:MyLab.KafkaClient.Consume.ConsumingContext.#ctor(System.IServiceProvider,Confluent.Kafka.ConsumeResult{System.String,System.String})">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.KafkaClient.Consume.ConsumingContext"/>
+            </summary>
+        </member>
         <member name="T:MyLab.KafkaClient.Consume.IConsumingContext">
             <summary>
             Contains tools for event consuming
             </summary>
         </member>
-        <member name="M:MyLab.KafkaClient.Consume.IConsumingContext.CreateLogic``1">
+        <member name="M:MyLab.KafkaClient.Consume.IConsumingContext.CreateLogic``2">
             <summary>
             Creates logic
             </summary>
@@ -19,9 +24,19 @@
             Provides incoming Kafka event
             </summary>
         </member>
-        <member name="M:MyLab.KafkaClient.Consume.ConsumingContext.#ctor(System.IServiceProvider,Confluent.Kafka.ConsumeResult{System.String,System.String})">
+        <member name="T:MyLab.KafkaClient.Consume.IKafkaConsumer">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.KafkaClient.Consume.ConsumingContext"/>
+            Defines Kafka consumer
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.Consume.IKafkaConsumer.TopicName">
+            <summary>
+            Target topic 
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.IKafkaConsumer.ConsumeAsync(MyLab.KafkaClient.Consume.IConsumingContext,System.Threading.CancellationToken)">
+            <summary>
+            Consumes incoming event 
             </summary>
         </member>
         <member name="T:MyLab.KafkaClient.Consume.IKafkaConsumerFactory">
@@ -32,6 +47,17 @@
         <member name="M:MyLab.KafkaClient.Consume.IKafkaConsumerFactory.Create(System.IServiceProvider)">
             <summary>
             Creates Kafka consumer uses registered services
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.Consume.IKafkaConsumerLogic`1">
+            <summary>
+            Defines consumer logic
+            </summary>
+            <typeparam name="TEventContent">incoming message content type</typeparam>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.IKafkaConsumerLogic`1.ConsumeAsync(MyLab.KafkaClient.Consume.IncomingKafkaEvent{`0})">
+            <summary>
+            Consumes incoming event
             </summary>
         </member>
         <member name="T:MyLab.KafkaClient.Consume.IncomingKafkaEvent`1">
@@ -69,38 +95,24 @@
             Initializes a new instance of <see cref="T:MyLab.KafkaClient.Consume.IncomingKafkaEvent`1"/>
             </summary>
         </member>
-        <member name="T:MyLab.KafkaClient.Consume.KafkaConsumer`1">
+        <member name="T:MyLab.KafkaClient.Consume.KafkaConsumer`2">
             <summary>
             Consumes Kafka events
             </summary>
             <typeparam name="TLogic">logic type</typeparam>
+            <typeparam name="TEventContent">event content type</typeparam>
         </member>
-        <member name="P:MyLab.KafkaClient.Consume.KafkaConsumer`1.TopicName">
+        <member name="P:MyLab.KafkaClient.Consume.KafkaConsumer`2.TopicName">
             <summary>
             Target topic 
             </summary>
         </member>
-        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumer`1.#ctor(System.String)">
+        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumer`2.#ctor(System.String)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.KafkaClient.Consume.KafkaConsumer`1"/>
+            Initializes a new instance of <see cref="T:MyLab.KafkaClient.Consume.KafkaConsumer`2"/>
             </summary>
         </member>
-        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumer`1.ConsumeAsync(MyLab.KafkaClient.Consume.IConsumingContext,System.Threading.CancellationToken)">
-            <summary>
-            Consumes incoming event 
-            </summary>
-        </member>
-        <member name="T:MyLab.KafkaClient.Consume.IKafkaConsumer">
-            <summary>
-            Defines Kafka consumer
-            </summary>
-        </member>
-        <member name="P:MyLab.KafkaClient.Consume.IKafkaConsumer.TopicName">
-            <summary>
-            Target topic 
-            </summary>
-        </member>
-        <member name="M:MyLab.KafkaClient.Consume.IKafkaConsumer.ConsumeAsync(MyLab.KafkaClient.Consume.IConsumingContext,System.Threading.CancellationToken)">
+        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumer`2.ConsumeAsync(MyLab.KafkaClient.Consume.IConsumingContext,System.Threading.CancellationToken)">
             <summary>
             Consumes incoming event 
             </summary>
@@ -386,6 +398,34 @@
             <summary>
             Initializes a new instance of <see cref="T:MyLab.KafkaClient.Test.KafkaTopic"/>
             </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Test.KafkaTopic.Exists">
+            <summary>
+            Gets true if topic exists
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Test.KafkaTopic.ProduceAsync(System.String)">
+            <summary>
+            Produces event with specified content
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Test.KafkaTopic.ProduceAsync(Confluent.Kafka.Message{System.String,System.String})">
+            <summary>
+            Produces event with specified message
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Test.KafkaTopic.ConsumeOne(System.TimeSpan)">
+            <summary>
+            Consumes next one event
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Test.KafkaTopic.ProvideConsumer">
+            <summary>
+            Provides inner consumer
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Test.KafkaTopic.DisposeAsync">
+            <inheritdoc />
         </member>
         <member name="T:MyLab.KafkaClient.Test.KafkaTopicFactory">
             <summary>

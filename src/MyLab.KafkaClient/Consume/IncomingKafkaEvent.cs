@@ -43,7 +43,16 @@ namespace MyLab.KafkaClient.Consume
 
             Headers = incomingEvent.Message.Headers;
             Key = incomingEvent.Message.Key;
-            Content = JsonConvert.DeserializeObject<TContent>(incomingEvent.Message.Value);
+
+            var strVal = incomingEvent.Message.Value;
+
+            if (typeof(TContent) == typeof(string) && (!strVal.StartsWith('"') || !strVal.EndsWith('"')))
+            {
+                strVal = $"\"{strVal.Trim('"')}\"";
+            }
+
+            Content = JsonConvert.DeserializeObject<TContent>(strVal);
+
             TopicPartitionOffset = incomingEvent.TopicPartitionOffset;
             IsPartitionEof = incomingEvent.IsPartitionEOF;
         }

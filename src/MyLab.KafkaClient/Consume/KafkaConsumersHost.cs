@@ -13,7 +13,7 @@ namespace MyLab.KafkaClient.Consume
         private readonly IServiceProvider _serviceProvider;
         private readonly IKafkaConsumerRegistry _consumerRegistry;
         private readonly IKafkaLog _kafkaLog;
-        private readonly IConsumer<string, string> _consumer;
+        private readonly IConsumer<string, string> _nativeConsumer;
 
         public KafkaConsumersHost(
             IServiceProvider serviceProvider,
@@ -27,7 +27,7 @@ namespace MyLab.KafkaClient.Consume
 
             var consumeConfig = consumerConfigProvider.ProvideConsumerConfig();
             var consumerBuilder = new ConsumerBuilder<string, string>(consumeConfig);
-            _consumer = consumerBuilder.Build();
+            _nativeConsumer = consumerBuilder.Build();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -41,98 +41,15 @@ namespace MyLab.KafkaClient.Consume
                 .ProvideConsumers()
                 .ToArray();
 
-            var topicsForSubscribe = consumers
-                .Select(c => c.TopicName)
-                .Distinct();
+            var consumeManager = ActivatorUtilities.CreateInstance<ConsumingManager>(_serviceProvider);
+            consumeManager.KafkaLog = _kafkaLog;
 
-            _consumer.Subscribe(topicsForSubscribe);
-
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                try
-                {
-                    var incomingEvent = _consumer.Consume(stoppingToken);
-
-                    if (incomingEvent == null || incomingEvent.Message == null)
-                        continue;
-                    
-                    var hitConsumers = consumers
-                        .Where(c => c.TopicName == incomingEvent.Topic)
-                        .ToArray();
-
-                    await ProcessEvent(hitConsumers, incomingEvent, stoppingToken);
-
-                    _kafkaLog?.ReportConsuming(incomingEvent);
-                }
-                catch (OperationCanceledException)
-                {
-                    break;
-                }
-                catch (ConsumeException e)
-                {
-                    _kafkaLog?.ReportConsumingError(e);
-
-                    if (e.Error.IsFatal)
-                    {
-                        //todo: log error
-                        break;
-                    }
-                    else
-                    {
-                        //todo: log warning
-                    }
-                }
-                catch (Exception)
-                {
-                    //todo: log error
-                    break;
-                }
-            }
-        }
-
-        private async Task ProcessEvent(IKafkaConsumer[] hitConsumers, ConsumeResult<string, string> incomingEvent, CancellationToken cancellationToken)
-        {
-            if (hitConsumers.Length > 1)
-            {
-                //todo: log warning
-            }
-            else if (hitConsumers.Length == 0)
-            {
-                //todo: log warning
-
-                return;
-            }
-
-            var c = hitConsumers.First();
-
-            using var scope = _serviceProvider.CreateScope();
-            var scopedServiceProvider = scope.ServiceProvider;
-
-            SetScopedEvent(incomingEvent, scopedServiceProvider);
-
-            var ctx = new ConsumingContext(scopedServiceProvider, incomingEvent);
-
-            try
-            {
-                await c.ConsumeAsync(ctx, cancellationToken);
-
-                _consumer.Commit(incomingEvent);
-            }
-            catch (Exception e)
-            {
-                //todo: log error
-            }
-        }
-
-        private static void SetScopedEvent(ConsumeResult<string, string> incomingEvent, IServiceProvider scopedServiceProvider)
-        {
-            var eventAccessor = (KafkaEventAccessor) scopedServiceProvider.GetService(typeof(KafkaEventAccessor));
-            eventAccessor?.SetScopedIncomingEvent(incomingEvent);
+            await consumeManager.ConsumeLoopAsync(_nativeConsumer, consumers, stoppingToken);
         }
 
         public override void Dispose()
         {
-            _consumer.Dispose();
+            _nativeConsumer.Dispose();
 
             base.Dispose();
         }

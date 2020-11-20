@@ -18,10 +18,9 @@ namespace MyLab.KafkaClient.Consume
             _consumeResult = consumeResult;
         }
 
-        public IKafkaConsumerLogic CreateLogic<T>() 
-            where T : IKafkaConsumerLogic
+        public IKafkaConsumerLogic<TEventContent> CreateLogic<TLogic, TEventContent>() where TLogic : IKafkaConsumerLogic<TEventContent>
         {
-            return ActivatorUtilities.CreateInstance<T>(_serviceProvider);
+            return ActivatorUtilities.CreateInstance<TLogic>(_serviceProvider);
         }
 
         public IncomingKafkaEvent<TContent> ProvideEvent<TContent>()
