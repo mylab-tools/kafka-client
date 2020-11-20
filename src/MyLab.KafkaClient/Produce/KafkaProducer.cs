@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Confluent.Kafka;
-using Microsoft.Extensions.Options;
 
 namespace MyLab.KafkaClient.Produce
 {
@@ -10,20 +9,14 @@ namespace MyLab.KafkaClient.Produce
     {
         private readonly IKafkaLog _log;
         private readonly Lazy<IProducer<string, string>> _producer;
-
-        public KafkaProducer(IOptions<ProducerConfig> options, IKafkaLog log = null)
-            :this(options.Value)
+        
+        public KafkaProducer(IProducerConfigProvider configProvider, IKafkaLog log = null)
         {
-            
-        }
-
-        public KafkaProducer(ProducerConfig options, IKafkaLog log = null)
-        {
-            if (options == null) throw new ArgumentNullException(nameof(options));
             _log = log;
 
+            var config = configProvider.ProvideProducerConfig();
             _producer = new Lazy<IProducer<string, string>>(() =>
-                new ProducerBuilder<string, string>(options).Build());
+                new ProducerBuilder<string, string>(config).Build());
         }
 
         public Task<TopicPartitionOffset> ProduceAsync(OutgoingKafkaEvent eventObj, CancellationToken cancellationToken = default)

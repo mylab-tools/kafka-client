@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLab.KafkaClient", "MyLab.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{F5195626-B0CE-428C-9A6E-212A5C472463}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{E839D269-B6D9-4322-A21C-9E9623DCBDFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{E839D269-B6D9-4322-A21C-9E9623DCBDFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestServer", "TestServer\TestServer.csproj", "{EDF1C863-ACD7-4118-B22B-416F118DC030}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{E839D269-B6D9-4322-A21C-9E9623DCBDFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E839D269-B6D9-4322-A21C-9E9623DCBDFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E839D269-B6D9-4322-A21C-9E9623DCBDFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDF1C863-ACD7-4118-B22B-416F118DC030}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDF1C863-ACD7-4118-B22B-416F118DC030}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDF1C863-ACD7-4118-B22B-416F118DC030}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDF1C863-ACD7-4118-B22B-416F118DC030}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
