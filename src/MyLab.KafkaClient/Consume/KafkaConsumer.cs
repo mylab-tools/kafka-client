@@ -11,6 +11,8 @@ namespace MyLab.KafkaClient.Consume
     public class KafkaConsumer<TLogic, TEventContent> : IKafkaConsumer
         where TLogic : IKafkaConsumerLogic<TEventContent>
     {
+        private readonly TLogic _logic;
+
         /// <summary>
         /// Target topic 
         /// </summary>
@@ -25,11 +27,20 @@ namespace MyLab.KafkaClient.Consume
         }
 
         /// <summary>
+        /// Initializes a new instance of <see cref="KafkaConsumer{TLogic, TEventContent}"/>
+        /// </summary>
+        public KafkaConsumer(string topicName, TLogic logic)
+        {
+            _logic = logic;
+            TopicName = topicName;
+        }
+
+        /// <summary>
         /// Consumes incoming event 
         /// </summary>
         public Task ConsumeAsync(IConsumingContext ctx, CancellationToken cancellationToken)
         {
-            var logic = ctx.CreateLogic<TLogic, TEventContent>();
+            var logic = _logic ?? ctx.CreateLogic<TLogic, TEventContent>();
             return logic.ConsumeAsync(ctx.ProvideEvent<TEventContent>());
         }
     }

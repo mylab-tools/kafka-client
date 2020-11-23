@@ -14,18 +14,19 @@ namespace MyLab.KafkaClient.Consume
         private readonly IServiceProvider _serviceProvider;
         private readonly IKafkaLog _kafkaLog;
         private readonly DslLogger _log;
-        private readonly ConsumerConfig _config;
+        private readonly ConsumerConfigEx _config;
 
-        public ConsumingManager( 
+        public ConsumingManager(
             IServiceProvider serviceProvider,
             IConsumerConfigProvider consumerConfigProvider,
             IKafkaLog kafkaLog = null,
             ILogger<ConsumingManager> logger = null)
         {
-            _serviceProvider = serviceProvider;
+            if (consumerConfigProvider == null) throw new ArgumentNullException(nameof(consumerConfigProvider));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             _config = consumerConfigProvider.ProvideConsumerConfig();
-            _kafkaLog = kafkaLog;
             _log = logger?.Dsl();
+            _kafkaLog = kafkaLog;
         }
 
         public async Task ConsumeLoopAsync(
@@ -56,30 +57,54 @@ namespace MyLab.KafkaClient.Consume
                             .Where(c => c.TopicName == incomingEvent.Topic)
                             .ToArray();
 
-                        await ProcessEvent(nativeConsumer, hitConsumers, incomingEvent, cancellationToken);
+                        Exception logicUnhandledException = null;
+
+                        do
+                        {
+                            if (logicUnhandledException != null)
+                            {
+                                logicUnhandledException = null;
+                                await DelayAfterError(cancellationToken);
+                            }
+
+                            try
+                            {
+                                await ProcessEvent(nativeConsumer, hitConsumers, incomingEvent, cancellationToken);
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                throw;
+                            }
+                            catch (ConsumeException e)
+                            {
+                                _kafkaLog?.ReportConsumingError(e);
+
+                                if (e.Error.IsFatal)
+                                {
+                                    _log.Error("Fatal error when event consuming", e).Write();
+                                }
+                                else
+                                {
+                                    _log.Error(e).Write();
+                                }
+
+                                logicUnhandledException = e;
+                            }
+                            catch (Exception e)
+                            {
+                                _log.Error("Unhandled error when event consuming", e).Write();
+
+                                logicUnhandledException = e;
+                            }
+                            
+                        } while (logicUnhandledException != null);
 
                         _kafkaLog?.ReportConsuming(incomingEvent);
                     }
                     catch (OperationCanceledException)
                     {
+                        _log.Warning("Consuming was cancelled").Write();
                         break;
-                    }
-                    catch (ConsumeException e)
-                    {
-                        _kafkaLog?.ReportConsumingError(e);
-
-                        if (e.Error.IsFatal)
-                        {
-                            _log.Error("Fatal error when event consuming", e).Write();
-                        }
-                        else
-                        {
-                            _log.Error(e).Write();
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        _log.Error("Unhandled error when event consuming", e).Write();
                     }
                 }
             }
@@ -87,6 +112,11 @@ namespace MyLab.KafkaClient.Consume
             {
                 nativeConsumer.Dispose();
             }
+        }
+
+        Task DelayAfterError(CancellationToken cancellationToken)
+        {
+            return Task.Delay(_config.ErrorBasedRetryIntervalMs ?? 1000, cancellationToken);
         }
 
         private IConsumer<string, string> CreateConsumer()

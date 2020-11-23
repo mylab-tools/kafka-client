@@ -1,6 +1,4 @@
-﻿using Confluent.Kafka;
-
-namespace MyLab.KafkaClient
+﻿namespace MyLab.KafkaClient
 {
     /// <summary>
     /// Provides Kafka consumer config
@@ -10,6 +8,6 @@ namespace MyLab.KafkaClient
         /// <summary>
         /// Provides consumer config
         /// </summary>
-        ConsumerConfig ProvideConsumerConfig();
+        ConsumerConfigEx ProvideConsumerConfig();
     }
 }

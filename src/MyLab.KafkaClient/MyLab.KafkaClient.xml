@@ -4,6 +4,31 @@
         <name>MyLab.KafkaClient</name>
     </assembly>
     <members>
+        <member name="T:MyLab.KafkaClient.ConsumerConfigEx">
+            <summary>
+            Extended base consumer configuration based on <see cref="T:Confluent.Kafka.ConsumerConfig"/>
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.ConsumerConfigEx.ErrorBasedRetryIntervalMs">
+            <summary>
+            An idle interval (before next try) after unhandled exception
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.ConsumerConfigEx.#ctor(Confluent.Kafka.ClientConfig)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.KafkaClient.ConsumerConfigEx"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.ConsumerConfigEx.#ctor(Confluent.Kafka.ConsumerConfig)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.KafkaClient.ConsumerConfigEx"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.ConsumerConfigEx.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.KafkaClient.ConsumerConfigEx"/>
+            </summary>
+        </member>
         <member name="M:MyLab.KafkaClient.Consume.ConsumingContext.#ctor(System.IServiceProvider,Confluent.Kafka.ConsumeResult{System.String,System.String})">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.KafkaClient.Consume.ConsumingContext"/>
@@ -108,6 +133,11 @@
             </summary>
         </member>
         <member name="M:MyLab.KafkaClient.Consume.KafkaConsumer`2.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.KafkaClient.Consume.KafkaConsumer`2"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.Consume.KafkaConsumer`2.#ctor(System.String,`0)">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.KafkaClient.Consume.KafkaConsumer`2"/>
             </summary>
@@ -257,9 +287,99 @@
             Provides producer config
             </summary>
         </member>
+        <member name="T:MyLab.KafkaClient.KafkaConfigProvider">
+            <summary>
+            Provides Kafka configurations
+            </summary>
+        </member>
+        <member name="F:MyLab.KafkaClient.KafkaConfigProvider.DefaultCommonSectionName">
+            <summary>
+            Default section name for base properties
+            </summary>
+        </member>
+        <member name="F:MyLab.KafkaClient.KafkaConfigProvider.DefaultAdminSectionName">
+            <summary>
+            Default section name for admin properties
+            </summary>
+        </member>
+        <member name="F:MyLab.KafkaClient.KafkaConfigProvider.DefaultProduceSectionName">
+            <summary>
+            Default section name for producer properties
+            </summary>
+        </member>
+        <member name="F:MyLab.KafkaClient.KafkaConfigProvider.DefaultConsumeSectionName">
+            <summary>
+            Default section name for consumer properties
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.KafkaConfigProvider.CommonSectionName">
+            <summary>
+            Section name for base properties
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.KafkaConfigProvider.AdminSectionName">
+            <summary>
+            Section name for admin properties
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.KafkaConfigProvider.ProduceSectionName">
+            <summary>
+            Section name for producer properties
+            </summary>
+        </member>
+        <member name="P:MyLab.KafkaClient.KafkaConfigProvider.ConsumeSectionName">
+            <summary>
+            Section name for consumer properties
+            </summary>
+        </member>
         <member name="M:MyLab.KafkaClient.KafkaConfigProvider.#ctor(System.String,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.KafkaClient.KafkaConfigProvider"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.KafkaConfigProvider.ProvideAdminConfig">
+            <summary>
+            Provides admin config
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.KafkaConfigProvider.ProvideProducerConfig">
+            <summary>
+            Provides producer config
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.KafkaConfigProvider.ProvideConsumerConfig">
+            <summary>
+            Provides consumer config
+            </summary>
+        </member>
+        <member name="T:MyLab.KafkaClient.KafkaToolsIntegration">
+            <summary>
+            Extensions for <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to integrate Kafka tools
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.KafkaToolsIntegration.AddKafkaProducer(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds Kafka producing tools into application
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.KafkaToolsIntegration.AddKafkaConsuming(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.KafkaClient.Consume.KafkaConsumerRegistrar})">
+            <summary>
+            Adds Kafka consuming tools into application 
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.KafkaToolsIntegration.ConfigureKafkaTools(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+            <summary>
+            Configure Kafka tools
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.KafkaToolsIntegration.ConfigureKafkaTools(Microsoft.Extensions.DependencyInjection.IServiceCollection,MyLab.KafkaClient.KafkaConfigProvider)">
+            <summary>
+            Configure Kafka tools
+            </summary>
+        </member>
+        <member name="M:MyLab.KafkaClient.KafkaToolsIntegration.ConfigureKafkaTools(Microsoft.Extensions.DependencyInjection.IServiceCollection,MyLab.KafkaClient.IProducerConfigProvider,MyLab.KafkaClient.IConsumerConfigProvider,MyLab.KafkaClient.IAdminConfigProvider)">
+            <summary>
+            Configure Kafka tools
             </summary>
         </member>
         <member name="T:MyLab.KafkaClient.KafkaTopicAttribute">

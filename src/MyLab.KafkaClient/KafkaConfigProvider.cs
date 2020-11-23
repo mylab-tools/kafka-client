@@ -86,10 +86,10 @@ namespace MyLab.KafkaClient
         /// <summary>
         /// Provides consumer config
         /// </summary>
-        public ConsumerConfig ProvideConsumerConfig()
+        public ConsumerConfigEx ProvideConsumerConfig()
         {
             var baseSection = _configuration.GetSection(_baseSectionName);
-            var config = new ConsumerConfig();
+            var config = new ConsumerConfigEx();
 
             BindSectionToModel(baseSection, CommonSectionName, config);
             BindSectionToModel(baseSection, ConsumeSectionName, config);
