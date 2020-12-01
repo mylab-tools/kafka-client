@@ -101,9 +101,11 @@ namespace MyLab.KafkaClient.Consume
 
                         _kafkaLog?.ReportConsuming(incomingEvent);
                     }
-                    catch (OperationCanceledException)
+                    catch (OperationCanceledException e)
                     {
-                        _log.Warning("Consuming was cancelled").Write();
+                        _log.Act("End of app logic. Consuming was cancelled.")
+                            .AndFactIs("Initial exception", e)
+                            .Write();
                         break;
                     }
                 }
